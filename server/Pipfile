@@ -1,0 +1,39 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+Django = "*"
+channels = "*"
+channels_redis = "*"
+daphne = "*"
+asgiref = "*"
+graphene = {extras = ["django"]}
+djangorestframework = "*"
+Twisted = {extras = ["http2", "tls"]}
+django-cors-headers = "*"
+"psycopg2-binary" = "*"
+celery = "*"
+kombu = "*"
+django-redis = "*"
+delorean = "*"
+django-filter = "*"
+
+[dev-packages]
+pytest = "*"
+pytest-django = "*"
+pytest-asyncio = "*"
+pytest-sugar = "*"
+django-extensions = "*"
+Faker = "*"
+django-debug-toolbar = "*"
+pytest-cov = "*"
+isort = "*"
+ptpython = "*"
+"flake8" = "*"
+"flake8-commas" = "*"
+"pep8-naming" = "*"
+
+[requires]
+python_version = "3.7"

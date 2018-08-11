@@ -1,0 +1,92 @@
+version: '3.6'
+
+
+services:
+  trader-django:
+    build:
+      context: server/
+      dockerfile: docker/Dockerfile-django
+    container_name: 'trader-django'
+    labels:
+      application: 'trader-django'
+    env_file:
+      - ./server/env/base.env
+    expose:
+      - '8001'
+    depends_on:
+      - trader-postgres
+      - trader-redis
+      - trader-celery
+    volumes:
+      - trader-static-files:/opt/trader/static
+
+  trader-postgres:
+    image: postgres:latest
+    container_name: 'trader-postgres'
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'trader'
+    labels:
+      application: 'trader-postgres'
+    volumes:
+      - trader-db-data:/var/lib/postgresql
+    expose:
+      - '5432'
+
+  trader-redis:
+    image: redis:latest
+    container_name: 'trader-redis'
+    labels:
+      application: 'trader-redis'
+    expose:
+      - '6379'
+
+  trader-rabbitmq:
+    image: rabbitmq:latest
+    container_name: 'trader-rabbitmq'
+    labels:
+      application: 'trader-rabbitmq'
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=pass
+    expose:
+      - '5672'
+      - '15672'
+
+  trader-celery:
+    build:
+      context: server/
+      dockerfile: docker/Dockerfile-django
+    container_name: 'trader-celery'
+    labels:
+      application: 'trader-celery'
+    env_file:
+      - server/env/base.env
+    depends_on:
+      - trader-rabbitmq
+    command: bash docker/celery-entrypoint.sh
+
+  trader-caddy:
+    image: abiosoft/caddy:latest
+    container_name: 'trader-caddy'
+    labels:
+      application: 'trader-caddy'
+    env_file:
+      - caddy/base.env
+    environment:
+     - CADDYPATH=/etc/caddycerts
+    ports:
+      - '80:80'
+      - '443:443'
+    depends_on:
+      - trader-django
+    volumes:
+      - ./caddy/conf/Caddyfile:/etc/Caddyfile
+      - trader-caddy-certificate:/etc/caddycerts
+      - trader-static-files:/opt/trader/static
+
+volumes:
+  trader-db-data:
+  trader-caddy-certificate:
+  trader-static-files:
