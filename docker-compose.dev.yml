@@ -16,3 +16,16 @@ services:
       - ./server/env/dev.env
     volumes:
       - ./server/:/opt/trader/django
+
+  trader-postgres:
+    ports:
+      - '5432:5432'
+
+  trader-redis:
+    ports:
+      - '6379:6379'
+
+  trader-rabbitmq:
+    ports:
+      - '5672:5672'
+      - '15672:15672'

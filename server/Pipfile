@@ -36,4 +36,4 @@ ptpython = "*"
 "pep8-naming" = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.7.0"
