@@ -19,6 +19,7 @@ kombu = "*"
 django-redis = "*"
 delorean = "*"
 django-filter = "*"
+djangorestframework-jwt = "*"
 
 [dev-packages]
 pytest = "*"

@@ -13,20 +13,21 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls import url, include
 from django.contrib import admin
 from django.urls import path
-from django.conf.urls import url, include
 from graphene_django.views import GraphQLView
+from rest_framework_jwt.views import obtain_jwt_token
 
 
 api_urlpatterns = [
     path('accounts/', include('accounts.urls')),
 ]
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls')),
     path('api/', include(api_urlpatterns)),
     path('graphql', GraphQLView.as_view(graphiql=True)),
+    url(r'^api-token-auth/', obtain_jwt_token),
 ]

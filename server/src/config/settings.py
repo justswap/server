@@ -17,6 +17,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CORS_ORIGIN_WHITELIST = [
+    'localhost:3000',
+    '127.0.0.1:3000',
+]
+
 AUTH_USER_MODEL = 'accounts.User'
 
 
@@ -150,13 +155,14 @@ LOGIN_URL = 'rest_framework:login'
 LOGOUT_URL = 'rest_framework:logout'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
+    'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    ],
-    'PAGE_SIZE': 20,  # Max number of results returned from a list API call
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
 }
 # Django channels
 ASGI_APPLICATION = 'config.routing.application'
