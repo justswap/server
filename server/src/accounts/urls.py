@@ -1,20 +1,17 @@
-
-from django.conf.urls import url
+from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 
-from accounts.views import ValidateUniqueFields, MyAccount, Users, CreateAccount, ChangePassword
+from accounts.views import ValidateUniqueFields, CreateAccount, ChangePassword
 
 app_name = 'accounts'
 
 router = DefaultRouter()
-router.register(r'', Users, base_name='users')
 
 urlpatterns = [
-    url(r'validate', ValidateUniqueFields.as_view()),
-    url(r'change-password', ChangePassword.as_view()),
-    url(r'me', MyAccount.as_view()),
-    url(r'create', CreateAccount.as_view()),
+    path('validate/', ValidateUniqueFields.as_view()),
+    path('change-password/', ChangePassword.as_view()),
+    path('create/', CreateAccount.as_view()),
 ]
 
 urlpatterns += router.urls

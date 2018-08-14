@@ -1,21 +1,10 @@
-
-from rest_framework import mixins, generics, viewsets, status
+from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.models import User
-from accounts.serializers import CreateUserSerializer, UserSerializer, ChangePasswordSerializer
-
-
-class Users(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
-    """
-    Implements an endpoint for retrieving users
-    """
-    serializer_class = UserSerializer
-    queryset = User.objects.all()
-    permission_classes = (IsAuthenticated,)
-    lookup_field = 'username'
+from accounts.serializers import CreateUserSerializer, ChangePasswordSerializer
 
 
 class CreateAccount(generics.CreateAPIView):
@@ -24,18 +13,6 @@ class CreateAccount(generics.CreateAPIView):
     """
     serializer_class = CreateUserSerializer
     permission_classes = (AllowAny,)
-
-
-class MyAccount(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Implements an endpoint for retrieving, updating and deleting own account
-    """
-    serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated,)
-
-    def get_object(self, queryset=None):
-        obj = self.request.user
-        return obj
 
 
 class ChangePassword(generics.UpdateAPIView):

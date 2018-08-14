@@ -14,7 +14,7 @@ def generate_user(is_superuser=False, password=None, save=True):
         simple_profile = fake.simple_profile()
         username = simple_profile['username']
         birth_date = simple_profile['birthdate']
-        birth_date = delorean.parse(birth_date).datetime
+        birth_date = delorean.parse(str(birth_date)).datetime
         email = simple_profile['mail']
         gender = simple_profile['sex']
         password = password if password else 'haslo1234'
