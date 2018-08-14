@@ -9,4 +9,4 @@ python manage.py collectstatic --noinput
 
 python manage.py createsu
 touch /tmp/.done.info
-    daphne -b 0.0.0.0 -p 8001 config.asgi:application
+daphne -b 0.0.0.0 -p 8001 config.asgi:application

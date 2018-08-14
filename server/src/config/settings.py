@@ -17,6 +17,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CORS_ORIGIN_WHITELIST = [
+    'localhost:3000',
+    '127.0.0.1:3000',
+]
+
 AUTH_USER_MODEL = 'accounts.User'
 
 
@@ -98,11 +103,11 @@ CACHES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT'),
+        'NAME': os.environ.get('DB_NAME', 'trader'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'postgres'),
+        'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
+        'PORT': os.environ.get('DB_PORT', 5432),
     },
 }
 
@@ -150,13 +155,14 @@ LOGIN_URL = 'rest_framework:login'
 LOGOUT_URL = 'rest_framework:logout'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
+    'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    ],
-    'PAGE_SIZE': 20,  # Max number of results returned from a list API call
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
 }
 # Django channels
 ASGI_APPLICATION = 'config.routing.application'
@@ -174,10 +180,10 @@ CHANNEL_LAYERS = {
 CELERY_TIMEZONE = TIME_ZONE
 
 CELERY_BROKER_URL = 'amqp://{user}:{password}@{host}:{port}/{vhost}/'.format(
-    user=os.environ.get('RABBIT_USER'),
-    password=os.environ.get('RABBIT_PASS'),
-    host=os.environ.get('RABBIT_HOST'),
-    port=os.environ.get('RABBIT_PORT'),
+    user=os.environ.get('RABBIT_USER', 'admin'),
+    password=os.environ.get('RABBIT_PASS', 'pass'),
+    host=os.environ.get('RABBIT_HOST', '127.0.0.1'),
+    port=os.environ.get('RABBIT_PORT', 5672),
     vhost=os.environ.get('RABBIT_ENV_VHOST', ''),
 )
 CELERY_RESULT_BACKEND = os.environ.get('')
@@ -185,9 +191,9 @@ BROKER_HEARTBEAT = '?heartbeat=30'
 CELERY_BROKER_URL += BROKER_HEARTBEAT
 
 # Redis
-REDIS_PORT = int(os.environ.get('REDIS_PORT'))
+REDIS_PORT = int(os.environ.get('REDIS_PORT', 6379))
 REDIS_DB = 0
-REDIS_HOST = os.environ.get('REDIS_HOST')
+REDIS_HOST = os.environ.get('REDIS_HOST', '127.0.0.1')
 
 # Celery configuration
 
