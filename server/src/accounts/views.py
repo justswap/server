@@ -74,6 +74,9 @@ class ValidateUniqueFields(APIView):
             value = values[0]  # validate only the first value associated with a field
             kwarg = f'{field}__iexact'  # case insensitive
 
-            response[field] = ['valid', 'invalid'][User.objects.filter(**{kwarg: value}).exists()]
+            if User.objects.filter(**{kwarg: value}).exists():
+                response[field] = 'exists'
+            else:
+                response[field] = 'ok'
 
         return Response(response)
